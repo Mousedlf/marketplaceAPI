@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -33,6 +35,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, API>
+     */
+    #[ORM\OneToMany(targetEntity: API::class, mappedBy: 'createdBy', orphanRemoval: true)]
+    private Collection $registeredAPIs;
+
+    /**
+     * @var Collection<int, UserAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: UserAPIKey::class, mappedBy: 'ofUser', orphanRemoval: true)]
+    private Collection $boughtAPIKeys;
+
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'byUser', orphanRemoval: true)]
+    private Collection $orders;
+
+    public function __construct()
+    {
+        $this->registeredAPIs = new ArrayCollection();
+        $this->boughtAPIKeys = new ArrayCollection();
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,5 +134,95 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, API>
+     */
+    public function getRegisteredAPIs(): Collection
+    {
+        return $this->registeredAPIs;
+    }
+
+    public function addRegisteredAPI(API $registeredAPI): static
+    {
+        if (!$this->registeredAPIs->contains($registeredAPI)) {
+            $this->registeredAPIs->add($registeredAPI);
+            $registeredAPI->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredAPI(API $registeredAPI): static
+    {
+        if ($this->registeredAPIs->removeElement($registeredAPI)) {
+            // set the owning side to null (unless already changed)
+            if ($registeredAPI->getCreatedBy() === $this) {
+                $registeredAPI->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAPIKey>
+     */
+    public function getBoughtAPIKeys(): Collection
+    {
+        return $this->boughtAPIKeys;
+    }
+
+    public function addBoughtAPIKey(UserAPIKey $boughtAPIKey): static
+    {
+        if (!$this->boughtAPIKeys->contains($boughtAPIKey)) {
+            $this->boughtAPIKeys->add($boughtAPIKey);
+            $boughtAPIKey->setOfUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoughtAPIKey(UserAPIKey $boughtAPIKey): static
+    {
+        if ($this->boughtAPIKeys->removeElement($boughtAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($boughtAPIKey->getOfUser() === $this) {
+                $boughtAPIKey->setOfUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setByUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getByUser() === $this) {
+                $order->setByUser(null);
+            }
+        }
+
+        return $this;
     }
 }
