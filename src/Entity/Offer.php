@@ -19,6 +19,9 @@ class Offer
     #[ORM\Column]
     private ?int $nbOfAvailableRequests = null;
 
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    private ?API $API = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Offer
     public function setNbOfAvailableRequests(int $nbOfAvailableRequests): static
     {
         $this->nbOfAvailableRequests = $nbOfAvailableRequests;
+
+        return $this;
+    }
+
+    public function getAPI(): ?API
+    {
+        return $this->API;
+    }
+
+    public function setAPI(?API $API): static
+    {
+        $this->API = $API;
 
         return $this;
     }

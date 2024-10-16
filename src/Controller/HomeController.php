@@ -15,7 +15,7 @@ class HomeController extends AbstractController
         $apis = $APIRepository->findAll();
 
         return $this->render('home/index.html.twig', [
-            'apis' => $apis,
+            'apis' => $apis
         ]);
     }
 }
