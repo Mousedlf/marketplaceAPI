@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\API;
 use App\Entity\Offer;
-use App\Services\CartService;
+use App\Service\CartService;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
