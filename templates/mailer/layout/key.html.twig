@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de votre achat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+        }
+        p {
+            color: #666666;
+        }
+        .order-summary {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .activation-key {
+            background-color: #e8f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+            color: #007acc;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #999999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Merci pour votre achat, {{ mail }} !</h1>
+    <p>Nous vous remercions pour votre commande. Voici un petit récapitulatif :</p>
+
+    <div class="order-summary">
+        <p><strong>Date de commande :</strong> {{ date_order }}</p>
+        <p><strong>Produit acheté :</strong> {{ product_name }}</p>
+        <p><strong>Offre selectioné :</strong> {{ offre_name }}</p>
+        <p><strong>Total :</strong> {{ product_price }}€</p>
+    </div>
+
+    <p>Votre clé d'activation est :</p>
+    <div class="activation-key">
+        {{ activation_key }}
+    </div>
+
+    <p>Si vous avez des questions ou des problèmes, n'hésitez pas à nous contacter.</p>
+
+    <div class="footer">
+        <p>2024 - Marketplace. Tous droits réservés.</p>
+    </div>
+</div>
+</body>
+</html>
