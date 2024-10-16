@@ -25,6 +25,10 @@ class Order
     #[ORM\Column(nullable: true)]
     private ?float $total = null;
 
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $byUser = null;
+
     public function __construct()
     {
         $this->APIs = new ArrayCollection();
@@ -67,6 +71,18 @@ class Order
     public function setTotal(?float $total): static
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    public function getByUser(): ?User
+    {
+        return $this->byUser;
+    }
+
+    public function setByUser(?User $byUser): static
+    {
+        $this->byUser = $byUser;
 
         return $this;
     }
