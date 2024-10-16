@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My account{% endblock %}
+
+{% block body %}
+    <div class="w-screen flex flex-col items-center justify-center">
+        <div class="mt-52 flex justify-center items-center border-2 rounded border-gray-500 bg-neutral text-neutral-content w-max p-10">
+            <div class="card-body items-center text-center">
+                <h2 class="card-title font-bold">{{ app.user.email }}</h2>
+                <p>Joined at {{ app.user.createdAt |date("d/m/Y") }}</p>
+                <div class="card-actions justify-end">
+                </div>
+            </div>
+        </div>
+        <div class="list">
+            <div class="w-full">
+                <div class="mt-2 w-screen flex flex-row justify-center items-center border-2 rounded border-gray-500 bg-neutral text-neutral-content p-10">
+                    <div class="flex w-full flex-row card-body items-center text-center justify-around">
+                        <h2 class="card-title font-bold">Nom api</h2>
+                        <p>Nombres de requêtes restantes</p>
+                        <div class="card-actions justify-end">
+                            Ajouter requetes
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
