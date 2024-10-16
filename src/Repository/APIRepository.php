@@ -16,6 +16,19 @@ class APIRepository extends ServiceEntityRepository
         parent::__construct($registry, API::class);
     }
 
+    public function getRandomApi()
+    {
+        $apis = $this->findAll();
+
+        if (empty($apis)) {
+            return null;
+        }
+
+        $randomIndex = array_rand($apis);
+
+        return $apis[$randomIndex];
+    }
+
     //    /**
     //     * @return API[] Returns an array of API objects
     //     */
