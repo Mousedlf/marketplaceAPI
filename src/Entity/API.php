@@ -38,6 +38,24 @@ class API
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'API')]
     private Collection $offers;
 
+    #[ORM\Column(length: 500)]
+    private ?string $clientCreationRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $baseUrl = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $getRequestsRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $revokeKeyRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $generateNewKey = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $addNewRequestsRoute = null;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -138,6 +156,78 @@ class API
                 $offer->setAPI(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getClientCreationRoute(): ?string
+    {
+        return $this->clientCreationRoute;
+    }
+
+    public function setClientCreationRoute(string $clientCreationRoute): static
+    {
+        $this->clientCreationRoute = $clientCreationRoute;
+
+        return $this;
+    }
+
+    public function getBaseUrl(): ?string
+    {
+        return $this->baseUrl;
+    }
+
+    public function setBaseUrl(string $baseUrl): static
+    {
+        $this->baseUrl = $baseUrl;
+
+        return $this;
+    }
+
+    public function getGetRequestsRoute(): ?string
+    {
+        return $this->getRequestsRoute;
+    }
+
+    public function setGetRequestsRoute(string $getRequestsRoute): static
+    {
+        $this->getRequestsRoute = $getRequestsRoute;
+
+        return $this;
+    }
+
+    public function getRevokeKeyRoute(): ?string
+    {
+        return $this->revokeKeyRoute;
+    }
+
+    public function setRevokeKeyRoute(string $revokeKeyRoute): static
+    {
+        $this->revokeKeyRoute = $revokeKeyRoute;
+
+        return $this;
+    }
+
+    public function getGenerateNewKey(): ?string
+    {
+        return $this->generateNewKey;
+    }
+
+    public function setGenerateNewKey(string $generateNewKey): static
+    {
+        $this->generateNewKey = $generateNewKey;
+
+        return $this;
+    }
+
+    public function getAddNewRequestsRoute(): ?string
+    {
+        return $this->addNewRequestsRoute;
+    }
+
+    public function setAddNewRequestsRoute(string $addNewRequestsRoute): static
+    {
+        $this->addNewRequestsRoute = $addNewRequestsRoute;
 
         return $this;
     }
