@@ -43,6 +43,20 @@ class API
      */
     #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
     private Collection $platformAPIKeys;
+    #[ORM\Column(length: 500)]
+    private ?string $clientCreationRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $baseUrl = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $getRequestsRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $revokeKeyRoute = null;
+
+    #[ORM\Column(length: 500)]
+    private ?string $addNewRequestsRoute = null;
 
     public function __construct()
     {
@@ -163,6 +177,14 @@ class API
             $this->platformAPIKeys->add($platformAPIKey);
             $platformAPIKey->setApi($this);
         }
+    public function getClientCreationRoute(): ?string
+    {
+        return $this->clientCreationRoute;
+    }
+
+    public function setClientCreationRoute(string $clientCreationRoute): static
+    {
+        $this->clientCreationRoute = $clientCreationRoute;
 
         return $this;
     }
@@ -175,6 +197,50 @@ class API
                 $platformAPIKey->setApi(null);
             }
         }
+    public function getBaseUrl(): ?string
+    {
+        return $this->baseUrl;
+    }
+
+    public function setBaseUrl(string $baseUrl): static
+    {
+        $this->baseUrl = $baseUrl;
+
+        return $this;
+    }
+
+    public function getGetRequestsRoute(): ?string
+    {
+        return $this->getRequestsRoute;
+    }
+
+    public function setGetRequestsRoute(string $getRequestsRoute): static
+    {
+        $this->getRequestsRoute = $getRequestsRoute;
+
+        return $this;
+    }
+
+    public function getRevokeKeyRoute(): ?string
+    {
+        return $this->revokeKeyRoute;
+    }
+
+    public function setRevokeKeyRoute(string $revokeKeyRoute): static
+    {
+        $this->revokeKeyRoute = $revokeKeyRoute;
+
+        return $this;
+    }
+
+    public function getAddNewRequestsRoute(): ?string
+    {
+        return $this->addNewRequestsRoute;
+    }
+
+    public function setAddNewRequestsRoute(string $addNewRequestsRoute): static
+    {
+        $this->addNewRequestsRoute = $addNewRequestsRoute;
 
         return $this;
     }
