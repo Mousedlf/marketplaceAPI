@@ -23,6 +23,7 @@ class ProfileController extends AbstractController
     {
 
         // ajouter la suppression de compte avec modal ?
+        // delete un compte supprimer les clé / api ?
 
         $user = $this->getUser();
         $mailerService->sendAccountDeletionEmail($user->getEmail(), 'admin@example.com');

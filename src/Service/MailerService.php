@@ -84,14 +84,7 @@ class MailerService
      * @throws LoaderError
      * @throws Exception|TransportExceptionInterface
      */
-    public function sendNewClientApiKeyMail(
-        string $toEmail,
-        string $subject,
-        string $apiKey,
-        Order $order,
-        API $API,
-        Offer $offer
-    ): void
+    public function sendNewClientApiKeyMail(string $toEmail, string $apiKey, Order $order, API $API, Offer $offer): void
     {
         $htmlContent = $this->twig->render('mailer/layout/key.html.twig', [
             "mail" => $toEmail,
@@ -105,7 +98,7 @@ class MailerService
         $email = (new Email())
             ->from("marketplace@marketplace.com")
             ->to($toEmail)
-            ->subject($subject)
+            ->subject("Get Key generated")
             ->html($htmlContent);
 
         try {

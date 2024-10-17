@@ -4,7 +4,12 @@ namespace App\Controller;
 
 use App\Entity\API;
 use App\Entity\Offer;
+use App\Entity\Order;
+use App\Entity\UserAPIKey;
 use App\Service\CartService;
+use App\Service\FetchApiData;
+use App\Service\MailerService;
+use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Checkout\Session;
 use Stripe\Price;
 use Stripe\Product;
@@ -17,11 +22,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/cart')]
 class CartController extends AbstractController
 {
-    #[Route('/', name: 'app_cart')]
+    #[Route('', name: 'app_cart')]
     public function getCart(
         CartService $cartService,
     ): Response
     {
+        //dd($cartService->getCart());
         return $this->render('cart/index.html.twig', [
             "cart" => $cartService->getCart(),
             "total" => $cartService->getTotal(),
@@ -39,11 +45,10 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
 
-    #[Route('/remove/{api_id}/{offer_id}', name: 'app_cart_remove_item')]
+    #[Route('/remove/{api_id}', name: 'app_cart_remove_item')]
     public function removeItem(
         CartService $cartService,
         #[MapEntity(id: 'api_id')] API $api,
-        #[MapEntity(id: 'offer_id')] Offer $offer
     ): Response
     {
         $cartService->removeItem($api);
@@ -57,20 +62,7 @@ class CartController extends AbstractController
         return $this->json("empty cart");
     }
 
-
-    #[Route('/items', name: 'app_cart_items')]
-    public function displayCart(
-        CartService $cartService,
-    ): Response
-    {
-        return $this->render('cart/index.html.twig', [
-            "cart" => $cartService->getCart(),
-            "total" => $cartService->getTotal(),
-        ]);
-    }
-
-
-    #[Route('/pay', name: 'app_pay')]
+    #[Route('/stripe', name: 'app_stripe')]
     public function pay(
         CartService $cartService,
     ): Response
@@ -78,27 +70,77 @@ class CartController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-        $total = $cartService->getTotal() * 100;
+        $cartItems = $cartService->getCart();
+        $lineItems = [];
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
+        foreach ($cartItems as $item) {
+            $api = $item['api'];
+            $offer = $item['offer'];
+
+            $lineItems[] = [
                 'price_data' => [
                     'currency' => 'eur',
                     'product_data' => [
-                        'name' => 'Key API',
+                        'name' => $api->getName(),
+                        'description' => $offer->getNbOfAvailableRequests() . ' requests available',
                     ],
-                    'unit_amount' => 2000,
+                    'unit_amount' => $offer->getPrice() * 100,
                 ],
                 'quantity' => 1,
-            ]],
+            ];
+        }
+
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000/success?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => 'http://localhost:8000/cart/items',
+            'success_url' => 'http://localhost:8000/cart/make/order',
+            'cancel_url' => 'http://localhost:8000/cart',
         ]);
 
         return $this->redirect($session->url, 303);
+    }
+
+    #[Route('/make/order', name: 'app_order')]
+    public function makeOrder(
+        CartService $cartService,
+        FetchApiData $fetchApiData,
+        MailerService $mailerService,
+        EntityManagerInterface $manager
+    ): Response
+    {
+        $client = $this->getUser();
+
+        foreach ($cartService->getCart() as $cartItem) {
+            $apiKey = $fetchApiData->fetchGenerateKey($cartItem['api'], $cartItem['offer'], $client->getEmail());
+
+            // create Order
+            $order = new Order();
+            $order->setByUser($client)
+                ->addAPI($cartItem['api'])
+                ->setTotal($cartItem['offer']->getPrice());
+
+            $manager->persist($order);
+
+            // create UserAPIKey
+            $userApiKey = new UserApiKey();
+            $userApiKey->setApi($cartItem['api'])
+                ->setOfUser($client)
+                ->setNbPaidRequests($cartItem['offer']->getNbOfAvailableRequests())
+                ->setActive(true);
+
+            // EM
+            $manager->persist($userApiKey);
+            $manager->flush();
+
+            // send mail
+            $mailerService->sendNewClientApiKeyMail($client->getEmail(), $apiKey, $order, $cartItem['api'], $cartItem['offer']);
+        }
+
+        $cartService->emptyCart();
+        return $this->render('cart/validation.html.twig');
     }
 }
