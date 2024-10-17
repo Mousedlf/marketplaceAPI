@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\API;
+use App\Entity\Offer;
 use App\Entity\Order;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -58,7 +61,8 @@ class MailerService
      * @param string $subject
      * @param string $htmlContent
      * @return void
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws Exception
      */
     private function sendEmail(string $fromEmail, string $toEmail, string $subject, string $htmlContent): void
     {
@@ -67,6 +71,43 @@ class MailerService
             ->to($toEmail)
             ->subject($subject)
             ->html($htmlContent);
+        try {
+            $this->mailer->send($email);
+        } catch (Exception $e) {
+            throw new Exception('Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     * @throws Exception|TransportExceptionInterface
+     */
+    public function sendNewClientApiKeyMail(
+        string $toEmail,
+        string $subject,
+        string $apiKey,
+        Order $order,
+        API $API,
+        Offer $offer
+    ): void
+    {
+        $htmlContent = $this->twig->render('mailer/layout/key.html.twig', [
+            "mail" => $toEmail,
+            'activation_key' => $apiKey,
+            "date_order"=>$order->getCreatedAt(),
+            "offer_name"=>$offer->getNbOfAvailableRequests(),
+            "product_name"=>$API->getName(),
+            "product_price"=>$offer->getPrice(),
+        ]);
+
+        $email = (new Email())
+            ->from("marketplace@marketplace.com")
+            ->to($toEmail)
+            ->subject($subject)
+            ->html($htmlContent);
+
         try {
             $this->mailer->send($email);
         } catch (Exception $e) {
