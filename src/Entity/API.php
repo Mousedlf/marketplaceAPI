@@ -22,12 +22,6 @@ class API
     #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'APIs')]
     private Collection $orders;
 
-    /**
-     * @var Collection<int, UserAPIKeys>
-     */
-    #[ORM\OneToMany(targetEntity: UserAPIKeys::class, mappedBy: 'API', orphanRemoval: true)]
-    private Collection $userAPIKeys;
-
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -46,7 +40,6 @@ class API
 
     public function __construct()
     {
-        $this->userAPIKeys = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->offers = new ArrayCollection();
     }
@@ -54,36 +47,6 @@ class API
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, UserAPIKey>
-     */
-    public function getUserAPIKeys(): Collection
-    {
-        return $this->userAPIKeys;
-    }
-
-    public function addUserAPIKey(UserAPIKey $userAPIKey): static
-    {
-        if (!$this->userAPIKeys->contains($userAPIKey)) {
-            $this->userAPIKeys->add($userAPIKey);
-            $userAPIKey->setApi($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserAPIKey(UserAPIKey $userAPIKey): static
-    {
-        if ($this->userAPIKeys->removeElement($userAPIKey)) {
-            // set the owning side to null (unless already changed)
-            if ($userAPIKey->getApi() === $this) {
-                $userAPIKey->setApi(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
