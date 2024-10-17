@@ -27,6 +27,11 @@ class MassApiCreationFixture extends Fixture
             $api->setCreatedBy($user);
             $api->setName($faker->name);
             $api->setDescription($faker->text);
+            $api->setAddNewRequestsRoute($faker->url);
+            $api->setClientCreationRoute($faker->url);
+            $api->setGetRequestsRoute($faker->url);
+            $api->setRevokeKeyRoute($faker->url);
+            $api->setBaseUrl($faker->url);
             $manager->persist($api);
         }
         $manager->flush();

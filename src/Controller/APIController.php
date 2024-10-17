@@ -9,6 +9,7 @@ use App\Form\APIRegistrationType;
 use App\Form\OfferType;
 use App\Form\PlatformAPIKeyType;
 use App\Entity\Order;
+use App\Entity\UserAPIKey;
 use App\Repository\APIRepository;
 use App\Repository\OfferRepository;
 use App\Repository\PlatformAPIKeyRepository;
@@ -159,6 +160,12 @@ class APIController extends AbstractController
         $order->setByUser($user);
         $order->setTotal($offer->getPrice());
         $order->addAPI($api);
+
+        $newUserApiKey = new UserAPIKey();
+        $newUserApiKey->setOfUser($user);
+        $newUserApiKey->setActive(true);
+        $newUserApiKey->setNbUsedRequests(0);
+        $newUserApiKey->setNbPaidRequests($boughtRequests);
 
         $manager->persist($order);
         $manager->flush();

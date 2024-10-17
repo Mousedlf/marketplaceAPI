@@ -59,16 +59,17 @@ class API
     private ?string $addNewRequestsRoute = null;
 
     /**
-     * @var Collection<int, PlatformAPIKey>
+     * @var Collection<int, UserAPIKey>
      */
-    #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api')]
-    private Collection $platformAPIKeys;
+    #[ORM\OneToMany(targetEntity: UserAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
+    private Collection $userAPIKeys;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->offers = new ArrayCollection();
         $this->platformAPIKeys = new ArrayCollection();
+        $this->userAPIKeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,32 +258,19 @@ class API
     }
 
     /**
-     * @return Collection<int, PlatformAPIKey>
+     * @return Collection<int, UserAPIKey>
      */
-    public function getPlatformAPIKeys(): Collection
+    public function getUserAPIKeys(): Collection
     {
-        return $this->platformAPIKeys;
+        return $this->userAPIKeys;
     }
 
-    public function addPlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    public function addUserAPIKey(UserAPIKey $userAPIKey): static
     {
-        if (!$this->platformAPIKeys->contains($platformAPIKey)) {
-            $this->platformAPIKeys->add($platformAPIKey);
-            $platformAPIKey->setApi($this);
+        if (!$this->userAPIKeys->contains($userAPIKey)) {
+            $this->userAPIKeys->add($userAPIKey);
+            $userAPIKey->setApi($this);
         }
-
-        return $this;
-    }
-
-    public function removePlatformAPIKey(PlatformAPIKey $platformAPIKey): static
-    {
-        if ($this->platformAPIKeys->removeElement($platformAPIKey)) {
-            // set the owning side to null (unless already changed)
-            if ($platformAPIKey->getApi() === $this) {
-                $platformAPIKey->setApi(null);
-            }
-        }
-
         return $this;
     }
 }
