@@ -38,6 +38,11 @@ class API
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'API')]
     private Collection $offers;
 
+    /**
+     * @var Collection<int, PlatformAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
+    private Collection $platformAPIKeys;
     #[ORM\Column(length: 500)]
     private ?string $clientCreationRoute = null;
 
@@ -51,15 +56,13 @@ class API
     private ?string $revokeKeyRoute = null;
 
     #[ORM\Column(length: 500)]
-    private ?string $generateNewKey = null;
-
-    #[ORM\Column(length: 500)]
     private ?string $addNewRequestsRoute = null;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->offers = new ArrayCollection();
+        $this->platformAPIKeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +163,20 @@ class API
         return $this;
     }
 
+    /**
+     * @return Collection<int, PlatformAPIKey>
+     */
+    public function getPlatformAPIKeys(): Collection
+    {
+        return $this->platformAPIKeys;
+    }
+
+    public function addPlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if (!$this->platformAPIKeys->contains($platformAPIKey)) {
+            $this->platformAPIKeys->add($platformAPIKey);
+            $platformAPIKey->setApi($this);
+        }
     public function getClientCreationRoute(): ?string
     {
         return $this->clientCreationRoute;
@@ -172,6 +189,14 @@ class API
         return $this;
     }
 
+    public function removePlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if ($this->platformAPIKeys->removeElement($platformAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($platformAPIKey->getApi() === $this) {
+                $platformAPIKey->setApi(null);
+            }
+        }
     public function getBaseUrl(): ?string
     {
         return $this->baseUrl;
@@ -204,18 +229,6 @@ class API
     public function setRevokeKeyRoute(string $revokeKeyRoute): static
     {
         $this->revokeKeyRoute = $revokeKeyRoute;
-
-        return $this;
-    }
-
-    public function getGenerateNewKey(): ?string
-    {
-        return $this->generateNewKey;
-    }
-
-    public function setGenerateNewKey(string $generateNewKey): static
-    {
-        $this->generateNewKey = $generateNewKey;
 
         return $this;
     }
