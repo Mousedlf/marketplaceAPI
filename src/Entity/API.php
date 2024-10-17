@@ -58,6 +58,12 @@ class API
     #[ORM\Column(length: 500)]
     private ?string $addNewRequestsRoute = null;
 
+    /**
+     * @var Collection<int, PlatformAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api')]
+    private Collection $platformAPIKeys;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -246,6 +252,36 @@ class API
     public function setAddNewRequestsRoute(string $addNewRequestsRoute): static
     {
         $this->addNewRequestsRoute = $addNewRequestsRoute;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlatformAPIKey>
+     */
+    public function getPlatformAPIKeys(): Collection
+    {
+        return $this->platformAPIKeys;
+    }
+
+    public function addPlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if (!$this->platformAPIKeys->contains($platformAPIKey)) {
+            $this->platformAPIKeys->add($platformAPIKey);
+            $platformAPIKey->setApi($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if ($this->platformAPIKeys->removeElement($platformAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($platformAPIKey->getApi() === $this) {
+                $platformAPIKey->setApi(null);
+            }
+        }
 
         return $this;
     }
