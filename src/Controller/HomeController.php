@@ -12,7 +12,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(APIRepository $APIRepository): Response
     {
-        $apis = $APIRepository->findAll();
+        $apis = $APIRepository->findAllByDESC();
 
         return $this->render('home/index.html.twig', [
             'apis' => $apis

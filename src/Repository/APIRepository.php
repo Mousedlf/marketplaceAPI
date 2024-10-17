@@ -53,4 +53,9 @@ class APIRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllByDESC()
+    {
+        return $this->findBy(array(), array('createdBy' => 'DESC'));
+    }
 }
