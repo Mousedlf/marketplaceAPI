@@ -16,6 +16,10 @@ class PlatformAPIKey
     #[ORM\Column(length: 300)]
     private ?string $value = null;
 
+    #[ORM\ManyToOne(inversedBy: 'platformAPIKeys')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?API $api = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +33,18 @@ class PlatformAPIKey
     public function setValue(string $value): static
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function getApi(): ?API
+    {
+        return $this->api;
+    }
+
+    public function setApi(?API $api): static
+    {
+        $this->api = $api;
 
         return $this;
     }

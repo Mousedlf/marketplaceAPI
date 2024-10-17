@@ -38,10 +38,17 @@ class API
     #[ORM\OneToMany(targetEntity: Offer::class, mappedBy: 'API')]
     private Collection $offers;
 
+    /**
+     * @var Collection<int, PlatformAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
+    private Collection $platformAPIKeys;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->offers = new ArrayCollection();
+        $this->platformAPIKeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,6 +143,36 @@ class API
             // set the owning side to null (unless already changed)
             if ($offer->getAPI() === $this) {
                 $offer->setAPI(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlatformAPIKey>
+     */
+    public function getPlatformAPIKeys(): Collection
+    {
+        return $this->platformAPIKeys;
+    }
+
+    public function addPlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if (!$this->platformAPIKeys->contains($platformAPIKey)) {
+            $this->platformAPIKeys->add($platformAPIKey);
+            $platformAPIKey->setApi($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if ($this->platformAPIKeys->removeElement($platformAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($platformAPIKey->getApi() === $this) {
+                $platformAPIKey->setApi(null);
             }
         }
 
