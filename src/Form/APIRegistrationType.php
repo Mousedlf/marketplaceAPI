@@ -21,7 +21,6 @@ class APIRegistrationType extends AbstractType
             ->add('baseUrl')
             ->add('getRequestsRoute')
             ->add('revokeKeyRoute')
-            ->add('generateNewKey')
             ->add('addNewRequestsRoute')
 
 
