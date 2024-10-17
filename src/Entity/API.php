@@ -58,11 +58,18 @@ class API
     #[ORM\Column(length: 500)]
     private ?string $addNewRequestsRoute = null;
 
+    /**
+     * @var Collection<int, UserAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: UserAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
+    private Collection $userAPIKeys;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->offers = new ArrayCollection();
         $this->platformAPIKeys = new ArrayCollection();
+        $this->userAPIKeys = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +253,36 @@ class API
     public function setAddNewRequestsRoute(string $addNewRequestsRoute): static
     {
         $this->addNewRequestsRoute = $addNewRequestsRoute;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAPIKey>
+     */
+    public function getUserAPIKeys(): Collection
+    {
+        return $this->userAPIKeys;
+    }
+
+    public function addUserAPIKey(UserAPIKey $userAPIKey): static
+    {
+        if (!$this->userAPIKeys->contains($userAPIKey)) {
+            $this->userAPIKeys->add($userAPIKey);
+            $userAPIKey->setApi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAPIKey(UserAPIKey $userAPIKey): static
+    {
+        if ($this->userAPIKeys->removeElement($userAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($userAPIKey->getApi() === $this) {
+                $userAPIKey->setApi(null);
+            }
+        }
 
         return $this;
     }

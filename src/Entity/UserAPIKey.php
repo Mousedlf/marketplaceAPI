@@ -27,6 +27,10 @@ class UserAPIKey
     #[ORM\JoinColumn(nullable: false)]
     private ?User $ofUser = null;
 
+    #[ORM\ManyToOne(inversedBy: 'userAPIKeys')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?API $api = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +80,18 @@ class UserAPIKey
     public function setOfUser(?User $ofUser): static
     {
         $this->ofUser = $ofUser;
+
+        return $this;
+    }
+
+    public function getApi(): ?API
+    {
+        return $this->api;
+    }
+
+    public function setApi(?API $api): static
+    {
+        $this->api = $api;
 
         return $this;
     }

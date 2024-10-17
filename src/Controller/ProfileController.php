@@ -12,7 +12,10 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'app_profile')]
     public function index(): Response
     {
-        return $this->render('profile/index.html.twig');
+        $apis = $this->getUser()->getBoughtAPIKeys();
+        return $this->render('profile/index.html.twig',[
+            "apis"=>$apis
+        ]);
     }
 
     #[Route('/delete-account', name: 'delete_account')]
