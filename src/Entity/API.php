@@ -63,6 +63,10 @@ class API
      */
     #[ORM\OneToMany(targetEntity: UserAPIKey::class, mappedBy: 'api', orphanRemoval: true)]
     private Collection $userAPIKeys;
+     * @var Collection<int, PlatformAPIKey>
+     */
+    #[ORM\OneToMany(targetEntity: PlatformAPIKey::class, mappedBy: 'api')]
+    private Collection $platformAPIKeys;
 
     public function __construct()
     {
@@ -270,6 +274,18 @@ class API
         if (!$this->userAPIKeys->contains($userAPIKey)) {
             $this->userAPIKeys->add($userAPIKey);
             $userAPIKey->setApi($this);
+     * @return Collection<int, PlatformAPIKey>
+     */
+    public function getPlatformAPIKeys(): Collection
+    {
+        return $this->platformAPIKeys;
+    }
+
+    public function addPlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if (!$this->platformAPIKeys->contains($platformAPIKey)) {
+            $this->platformAPIKeys->add($platformAPIKey);
+            $platformAPIKey->setApi($this);
         }
 
         return $this;
@@ -281,6 +297,12 @@ class API
             // set the owning side to null (unless already changed)
             if ($userAPIKey->getApi() === $this) {
                 $userAPIKey->setApi(null);
+    public function removePlatformAPIKey(PlatformAPIKey $platformAPIKey): static
+    {
+        if ($this->platformAPIKeys->removeElement($platformAPIKey)) {
+            // set the owning side to null (unless already changed)
+            if ($platformAPIKey->getApi() === $this) {
+                $platformAPIKey->setApi(null);
             }
         }
 

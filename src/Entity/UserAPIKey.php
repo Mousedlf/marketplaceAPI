@@ -13,7 +13,6 @@ class UserAPIKey
     #[ORM\Column]
     private ?int $id = null;
 
-
     #[ORM\Column]
     private ?int $nbUsedRequests = null;
 
