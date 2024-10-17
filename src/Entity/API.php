@@ -177,6 +177,8 @@ class API
             $this->platformAPIKeys->add($platformAPIKey);
             $platformAPIKey->setApi($this);
         }
+        return $this;
+    }
     public function getClientCreationRoute(): ?string
     {
         return $this->clientCreationRoute;
@@ -197,6 +199,9 @@ class API
                 $platformAPIKey->setApi(null);
             }
         }
+        return $this;
+    }
+
     public function getBaseUrl(): ?string
     {
         return $this->baseUrl;
