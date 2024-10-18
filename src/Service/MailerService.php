@@ -98,7 +98,7 @@ class MailerService
         $email = (new Email())
             ->from("marketplace@marketplace.com")
             ->to($toEmail)
-            ->subject("Get Key generated")
+            ->subject("Get generated key")
             ->html($htmlContent);
 
         try {
