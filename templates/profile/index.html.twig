@@ -13,11 +13,37 @@
   </head>
   <body class="bg-gray-100 font-sans">
 
-  <section class="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-10">
+  <section class="max-w-3xl mx-auto py-2 bg-white rounded-xl mt-10">
     <div class="text-center mb-8">
       <h2 class="text-3xl font-bold text-gray-800">{{ app.user.email }}</h2>
       <p class="text-gray-400">Joined: {{ app.user.createdAt|date("d/m/Y") }}</p>
     </div>
+  </section>
+
+  <section class="mb-24 max-w-3xl mx-auto mt-6">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Registered APIs</h3>
+    {% if app.user.registeredAPIs.empty %}
+      <div class="flex flex-col items-center justify-center bg-white  p-4 rounded-xl border border-gray-100">
+        <span class="text-base font-light text-gray-800">You have not added an api.</span>
+        <span class="text-base font-light text-gray-700">Register your api <a class="font-medium text-blue-600 dark:text-blue-500 hover:underline" href="{{ path('register_new_api') }}">here</a></span>
+      </div>
+    {% else %}
+      <div class="grid grid-cols-1 gap-6">
+        {% for api in app.user.registeredAPIs %}
+          <div class="p-4 rounded-lg border flex justify-between align-middle items-center">
+              <h4 class="text-base font-bold text-gray-800">{{ api.name }}</h4>
+            <div class="flex justify-between items-center">
+              <a href="{{ path('show_api', {id:api.id}) }}" class="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                view details
+              </a>
+              <a href="{{  path('edit_api',  {id:api.id}) }}" class="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                edit
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
   </section>
 
   <section class="mb-24 max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-6">
@@ -33,6 +59,7 @@
         {% for boughtApi in apis %}
           {% set adminKey = apiRequestService.adminKeyByApi(boughtApi.api) %}
           {% set remainingRequests = apiRequestService.getRequestFromClient(boughtApi.api.getGetRequestsRoute, adminKey, app.user.email)["remainingRequests"] %}
+
           <div class="p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
             <span class="flex-row flex w-full justify-between">
               <h4 class="text-xl font-bold text-gray-800">{{ boughtApi.api.name }}</h4>

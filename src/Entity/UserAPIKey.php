@@ -30,6 +30,11 @@ class UserAPIKey
     #[ORM\JoinColumn(nullable: false)]
     private ?API $api = null;
 
+    public function __construct()
+    {
+        $this->nbUsedRequests = 0;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

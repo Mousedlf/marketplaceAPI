@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Marketplace API | Payment confirmation{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <main class="mx-auto w-full max-w-7xl px-6 pb-16 pt-10 sm:pb-24 lg:px-8">
+            <img class="mx-auto h-10 w-auto sm:h-12" src="{{ asset('styles/img/logo.png') }}" alt="Logo de l'entreprise">
+            <div class="mx-auto mt-20 max-w-2xl text-center sm:mt-24">
+                <p class="text-base font-semibold leading-8 text-indigo-600">Thank you for your purchase !</p>
+                <h1 class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">Your api key has been sent to you by email.</h1>
+                <p class="mt-4 text-base leading-7 text-gray-600 sm:mt-6 sm:text-lg sm:leading-8">You can also find this information in your user profile.</p>
+                <div class="mt-10 flex items-center justify-center gap-x-6">
+                    <a href="{{ path('app_profile') }}" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Go to my profile</a>
+                    <a href="{{ path('app_home') }}" class="text-sm font-semibold text-gray-900">Back to the homepage<span aria-hidden="true">&rarr;</span></a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
