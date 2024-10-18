@@ -21,13 +21,21 @@
         <hr>
         {% for offer in API.offers %}
             <div class="py-5 flex justify-between">
-                <div class="flex">
+                <div class="flex  items-center">
                     <h3 class="text-xl font-semibold pe-2">{{ offer.price }} €</h3>
                     <p class=" text-gray-500"> for {{ offer.nbOfAvailableRequests }} requests</p>
                 </div>
-                <div class="">
-                    <a href="{{ path("app_cart_add_item", {api_id: API.id , offer_id:  offer.id }) }}" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</a>
-                </div>
+
+                {% if app.user is same as API.createdBy %}
+                    <div class="flex">
+                        <a href="{{ path("edit_offer", {id: offer.id }) }}" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit </a>
+                    </div>
+                    {% else %}
+                        <div class="">
+                            <a href="{{ path("app_cart_add_item", {api_id: API.id , offer_id:  offer.id }) }}" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add to cart</a>
+                        </div>
+                {% endif %}
+
             </div>
             <hr>
         {% endfor %}
