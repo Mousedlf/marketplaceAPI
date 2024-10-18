@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        apiRequestService: '@App\Service\RequestToApiService'
 
 when@test:
     twig:
