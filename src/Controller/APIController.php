@@ -157,7 +157,7 @@ class APIController extends AbstractController
         $adminKey = $platformAPIKeyRepository->findOneBy(['api' => $api]);
         $clientEmail = $user->getEmail();
 
-        $returnContent = $requestToApiService->createClient($fullUrl, $boughtRequests, $adminKey, $clientEmail);
+        $returnContent = $requestToApiService->createClient($fullUrl, $boughtRequests, base64_decode($adminKey->getValue()), $clientEmail);
 
         $order = new Order();
         $order->setByUser($user);
