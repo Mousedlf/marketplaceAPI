@@ -25,7 +25,7 @@
                                                     <div class="mt-1 flex text-sm">
                                                         <p class="text-gray-500">{{ item.api.description }}</p>
                                                     </div>
-                                                    <p class="mt-1 text-sm font-medium text-gray-900">{{ item.offer.price }} € / {{ item.offer.nbOfAvailableRequests}} Requêtes</p>
+                                                    <p class="mt-1 text-sm font-medium text-gray-900">{{ item.offer.price }} € / {{ item.offer.nbOfAvailableRequests}} requests</p>
                                                 </div>
 
                                                 <div class="mt-4 sm:mt-0 sm:pr-9">
@@ -63,7 +63,7 @@
                             </dl>
 
                             <div class="mt-6">
-                                <a href="{{ path('app_stripe') }}" type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Payer</a>
+                                <a href="{{ path('app_stripe') }}" type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Pay</a>
                             </div>
                         </section>
                     </form>
@@ -71,7 +71,7 @@
                     <div class="flex flex-col justify-center gap-8">
                         <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl text-center">No Items</h1>
                         <div class="flex justify-center">
-                            <a href="{{ path('app_home') }}" class="border rounded-md bg-indigo-50 px-2.5 py-1.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">Voir les apis</a>
+                            <a href="{{ path('app_home') }}" class="border rounded-md bg-indigo-50 px-2.5 py-1.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">Explore the apis</a>
                         </div>
                     </div>
                 {% endif %}
