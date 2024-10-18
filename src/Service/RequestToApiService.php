@@ -54,15 +54,16 @@ class RequestToApiService
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getRequestFromClient(string $url, string $adminKey, string $clientEmail)
+    public function getRequestFromClient(string $extendUrl, string $baseUrl, string $adminKey, string $clientEmail)
     {
-
         if (!mb_check_encoding($adminKey, 'UTF-8')) {
             $adminKey = mb_convert_encoding($adminKey, 'UTF-8');
         }
         if (!mb_check_encoding($clientEmail, 'UTF-8')) {
             $clientEmail = mb_convert_encoding($clientEmail, 'UTF-8');
         }
+
+        $url = $baseUrl.$extendUrl;
 
         $response = $this->client->request(
             'POST',

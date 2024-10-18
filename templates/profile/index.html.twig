@@ -58,7 +58,7 @@
       <div class="grid grid-cols-1 gap-6">
         {% for boughtApi in apis %}
           {% set adminKey = apiRequestService.adminKeyByApi(boughtApi.api) %}
-          {% set remainingRequests = apiRequestService.getRequestFromClient(boughtApi.api.getGetRequestsRoute, adminKey, app.user.email)["remainingRequests"] %}
+          {% set remainingRequests = apiRequestService.getRequestFromClient(boughtApi.api.getGetRequestsRoute, boughtApi.api.getBaseUrl, adminKey, app.user.email)["remainingRequests"] %}
 
           <div class="p-6 bg-gray-50 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
             <span class="flex-row flex w-full justify-between">
