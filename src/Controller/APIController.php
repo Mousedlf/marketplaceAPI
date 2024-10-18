@@ -105,6 +105,9 @@ class APIController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $platformAPIKey->setAPI($api);
 
+            // encode en base64 la clé admin avant de la mettre en DB
+            $platformAPIKey->setValue(base64_encode($platformAPIKey->getValue()));
+
             $manager->persist($platformAPIKey);
             $manager->flush();
 
