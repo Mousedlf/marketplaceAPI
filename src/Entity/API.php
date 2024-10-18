@@ -70,6 +70,10 @@ class API
         $this->offers = new ArrayCollection();
         $this->platformAPIKeys = new ArrayCollection();
         $this->userAPIKeys = new ArrayCollection();
+        $this->setRevokeKeyRoute($this->baseUrl.$this->getRevokeKeyRoute());
+        $this->setGetRequestsRoute($this->baseUrl.$this->getGetRequestsRoute());
+        $this->setAddNewRequestsRoute($this->baseUrl.$this->getAddNewRequestsRoute());
+        $this->setClientCreationRoute($this->baseUrl.$this->getClientCreationRoute());
     }
 
     public function getId(): ?int

@@ -114,4 +114,29 @@ class MailerService
             throw new Exception('Failed to send email: ' . $e->getMessage());
         }
     }
+
+
+    public function sendNewGeneratedApiKey(
+        string $toEmail,
+        string $subject,
+        string $apiKey,
+    ): void
+    {
+        $htmlContent = $this->twig->render('mailer/layout/newKey.html.twig', [
+            "mail" => $toEmail,
+            'activation_key' => $apiKey,
+        ]);
+
+        $email = (new Email())
+            ->from("marketplace@marketplace.com")
+            ->to($toEmail)
+            ->subject($subject)
+            ->html($htmlContent);
+
+        try {
+            $this->mailer->send($email);
+        } catch (Exception $e) {
+            throw new Exception('Failed to send email: ' . $e->getMessage());
+        }
+    }
 }
