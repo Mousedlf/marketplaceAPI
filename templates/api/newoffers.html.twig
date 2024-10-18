@@ -13,7 +13,7 @@
     <p class="mt-4">Offers : </p>
 
     {% for offer in api.offers %}
-        <div class="flex p-4 rounded-lg border border-gray-200 ">
+        <div class="flex p-4 rounded-lg border border-gray-200 items-center">
             <p class="text-xl font-bold text-gray-800 pe-2">{{ offer.price }}€ </p>
             <p class="text-gray-600 mt-2"> for {{ offer.nbOfAvailableRequests }} requests </p>
         </div>

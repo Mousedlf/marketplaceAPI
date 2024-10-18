@@ -37,6 +37,26 @@ class APIController extends AbstractController
         ]);
     }
 
+    #[Route('/api/{id}/edit', name: 'edit_api')]
+    public function edit(Request $request, API $api, EntityManagerInterface $manager): Response
+    {
+        if($this->getUser() !== $api->getCreatedBy()){
+            return $this->redirectToRoute('app_home');
+        }
+
+        $form = $this->createForm(APIRegistrationType::class, $api);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($api);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_profile');
+        }
+        return $this->render('api/edit.html.twig', [
+            "editForm" => $form->createView(),
+        ]);
+    }
+
     #[Route('/api/register/new', name: 'register_new_api')]
     public function registerANewApi(
         Request $request,
@@ -177,4 +197,25 @@ class APIController extends AbstractController
         $mailerService->sendNewClientApiKeyMail($user->getEmail(),"Your brand new api key for".$api->getName(),$userApiKey,$order,$api,$offer);
         return $this->redirectToRoute('app_profile');
     }
+
+    #[Route('/offer/{id}/edit', name: 'edit_offer')]
+    public function editOffer(Offer $offer, Request $request, EntityManagerInterface $manager): Response
+    {
+        if($this->getUser() !== $offer->getAPI()->getCreatedBy()){
+            return $this->redirectToRoute('app_home'); //a changer?
+        }
+
+        $form = $this->createForm(OfferType::class, $offer);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($offer);
+            $manager->flush();
+
+            return $this->redirectToRoute('show_api', ['id' => $offer->getAPI()->getId()]);
+        }
+        return $this->render('api/editoffer.html.twig', [
+            "editForm" => $form->createView(),
+        ]);
+    }
+
 }
