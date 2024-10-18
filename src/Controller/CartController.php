@@ -18,6 +18,7 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Route('/cart')]
 class CartController extends AbstractController
@@ -65,6 +66,7 @@ class CartController extends AbstractController
     #[Route('/stripe', name: 'app_stripe')]
     public function pay(
         CartService $cartService,
+        UrlGeneratorInterface $urlGenerator
     ): Response
     {
         if (!$this->getUser()) {
@@ -93,12 +95,15 @@ class CartController extends AbstractController
             ];
         }
 
+        $cancelUrl = $urlGenerator->generate('app_cart', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $successUrl = $urlGenerator->generate('app_order', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => 'http://localhost:8000/cart/make/order',
-            'cancel_url' => 'http://localhost:8000/cart',
+            'success_url' => $successUrl,
+            'cancel_url' => $cancelUrl,
         ]);
 
         return $this->redirect($session->url, 303);
