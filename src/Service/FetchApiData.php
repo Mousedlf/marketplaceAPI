@@ -42,7 +42,7 @@ class FetchApiData
         }
 
         $responseData = $response->toArray();
-        $apiKey = $responseData['key'] ?? null;
+        $apiKey = $responseData['apiKey'] ?? null;
 
         if (!$apiKey) {
             throw new \Exception('API key not found in the response.');
